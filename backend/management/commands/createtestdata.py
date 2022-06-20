@@ -72,3 +72,15 @@ class Command(BaseCommand):
                         date=fake.date_time_this_year(),
                         presence=random.choice(["PR", "EX", "UN"]),
                     )
+
+        # create admin user
+        admin = User.objects.create(
+            username="demo_user",
+            email="demo_user@berkeley.edu",
+            first_name="Demo",
+            last_name="User",
+            is_superuser=True,
+            is_staff=True,
+        )
+        admin.set_password("pass")
+        admin.save()
