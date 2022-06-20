@@ -22,7 +22,6 @@ export interface Section {
   mentor: Mentor;
   capacity: number;
   description: string;
-  course: Course;
 }
 
 export interface Student {

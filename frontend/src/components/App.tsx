@@ -1,12 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {
-  HashRouter as Router,
-  Route,
-  Switch,
-  Link,
-  NavLinkProps,
-} from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 
 import { Home } from "./Home";
 import { Section } from "./Section";
@@ -15,11 +9,11 @@ import { Student } from "./Student";
 const App = () => {
   return (
     <Router>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/sections/:id" component={Section} />
-        <Route path="/students/:id" component={Student} />
-      </Switch>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/sections/:id" element={<Section />} />
+        <Route path="/students/:id" element={<Student />} />
+      </Routes>
     </Router>
   );
 };

@@ -67,6 +67,10 @@ def student_details(request, student_id):
         student = Student.objects.get(id=student_id)
         serializer = StudentSerializer(student)
         return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == "PUT":
+        student = Student.objects.get(id=student_id)
+        active = request.data.get("active")
+        
 
 
 @api_view(["GET", "PUT"])

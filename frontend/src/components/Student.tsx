@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Attendance, Student as StudentType } from "../utils/types";
 
-interface StudentProps {
-  match: {
-    params: {
-      id: string;
-    };
-  };
-}
 
-export const Student = ({
-  match: {
-    params: { id },
-  },
-}: StudentProps) => {
-  const [student, setStudent] = useState<StudentType>(undefined);
+export const Student = () => {
+  const [student, setStudent] = useState<StudentType>(undefined as never);
   const [attendances, setAttendances] = useState<Attendance[]>([]);
+  const { id } = useParams();
 
   useEffect(() => {
     fetch(`/api/students/${id}/details`)

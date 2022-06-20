@@ -1,24 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Section as SectionType, Student } from "../utils/types";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-interface SectionProps {
-  match: {
-    params: {
-      id: string;
-    };
-  };
-}
-
-type SectionTypeNoId = Omit<SectionType, "id">;
-
-export const Section = ({
-  match: {
-    params: { id },
-  },
-}: SectionProps) => {
-  const [section, setSection] = useState<SectionTypeNoId>(undefined);
+export const Section = () => {
+  const [section, setSection] = useState<SectionType>(undefined as never);
   const [students, setStudents] = useState<Student[]>([]);
+  const { id } = useParams();
 
   useEffect(() => {
     fetch(`/api/sections/${id}/details/`)
@@ -34,6 +21,26 @@ export const Section = ({
         setStudents(data);
       });
   }, []);
+
+  const handleToggleActive = (student_id: number) => {
+    const newStudents = [...students];
+    const student = newStudents.find((s) => s.id === student_id);
+    if (student) {
+      student.active = !student.active;
+      setStudents(newStudents);
+
+      // update database
+      fetch(`/api/students/${student_id}/details`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          active: student.active,
+        }),
+      });
+    }
+  };
 
   return (
     <div>
@@ -53,7 +60,13 @@ export const Section = ({
       <ul>
         {students.map((student) => (
           <li key={student.id}>
-            <Link to={`/students/${student.id}`}>{student.user.first_name} {student.user.last_name} (id: {student.id})</Link>
+            <button onClick={() => handleToggleActive(student.id)}>
+              {student.active ? "Set inactive" : "Set active"}
+            </button>{" "}
+            <Link to={`/students/${student.id}`}>
+              {student.user.first_name} {student.user.last_name} (id:{" "}
+              {student.id})
+            </Link>
           </li>
         ))}
       </ul>
