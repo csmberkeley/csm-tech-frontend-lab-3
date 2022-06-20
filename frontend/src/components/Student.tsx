@@ -2,30 +2,27 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Attendance, Student as StudentType } from "../utils/types";
 
-
 export const Student = () => {
   const [student, setStudent] = useState<StudentType>(undefined as never);
   const [attendances, setAttendances] = useState<Attendance[]>([]);
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`/api/students/${id}/details`)
+    fetch(`/api/students/${id}/details/`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setStudent(data);
       });
 
-    fetch(`/api/students/${id}/attendances`)
+    fetch(`/api/students/${id}/attendances/`)
       .then((res) => res.json())
       .then((data) => {
         // sort by date
-        data.sort((a, b) => {
+        data.sort((a: Attendance, b: Attendance) => {
           const dateA = new Date(a.date);
           const dateB = new Date(b.date);
           return dateA.getTime() - dateB.getTime();
         });
-        console.log(data);
         setAttendances(data);
       });
   }, []);
@@ -42,7 +39,7 @@ export const Student = () => {
     setAttendances(newAttendances);
 
     // update database
-    fetch(`/api/students/${id}/attendances`, {
+    fetch(`/api/students/${id}/attendances/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

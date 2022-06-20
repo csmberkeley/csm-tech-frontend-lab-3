@@ -63,14 +63,20 @@ def student_details(request, student_id):
     """
     GET: Return student details
     """
-    if request.method == "GET":
-        student = Student.objects.get(id=student_id)
-        serializer = StudentSerializer(student)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    elif request.method == "PUT":
-        student = Student.objects.get(id=student_id)
-        active = request.data.get("active")
-        
+    student = Student.objects.get(id=student_id)
+    serializer = StudentSerializer(student)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["PATCH"])
+def student_drop(request, student_id):
+    """
+    PATCH: Drop student from section, setting active to False
+    """
+    student = Student.objects.get(id=student_id)
+    student.active = False
+    student.save()
+    return Response(status=status.HTTP_202_ACCEPTED)
 
 
 @api_view(["GET", "PUT"])

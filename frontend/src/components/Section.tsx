@@ -11,35 +11,21 @@ export const Section = () => {
     fetch(`/api/sections/${id}/details/`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setSection(data);
       });
     fetch(`/api/sections/${id}/students/`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setStudents(data);
       });
   }, []);
 
-  const handleToggleActive = (student_id: number) => {
-    const newStudents = [...students];
-    const student = newStudents.find((s) => s.id === student_id);
-    if (student) {
-      student.active = !student.active;
-      setStudents(newStudents);
+  const handleDrop = (student_id: number) => {
+    const newStudents = students.filter((s) => s.id !== student_id);
+    setStudents(newStudents);
 
-      // update database
-      fetch(`/api/students/${student_id}/details`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          active: student.active,
-        }),
-      });
-    }
+    // update database
+    fetch(`/api/students/${student_id}/drop/`, { method: "PATCH" });
   };
 
   return (
@@ -60,9 +46,7 @@ export const Section = () => {
       <ul>
         {students.map((student) => (
           <li key={student.id}>
-            <button onClick={() => handleToggleActive(student.id)}>
-              {student.active ? "Set inactive" : "Set active"}
-            </button>{" "}
+            <button onClick={() => handleDrop(student.id)}>Drop</button>{" "}
             <Link to={`/students/${student.id}`}>
               {student.user.first_name} {student.user.last_name} (id:{" "}
               {student.id})
