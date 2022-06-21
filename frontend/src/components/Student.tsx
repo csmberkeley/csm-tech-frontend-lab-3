@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Attendance, Student as StudentType } from "../utils/types";
+import Cookies from "js-cookie";
 
 export const Student = () => {
   const [student, setStudent] = useState<StudentType>(undefined as never);
@@ -43,6 +44,7 @@ export const Student = () => {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        "X-CSRFToken": Cookies.get("csrftoken") ?? "",
       },
       body: JSON.stringify({
         id: attendanceId,

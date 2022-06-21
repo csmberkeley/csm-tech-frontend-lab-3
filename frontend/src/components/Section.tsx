@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Section as SectionType, Student } from "../utils/types";
 import { Link, useParams } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export const Section = () => {
   const [section, setSection] = useState<SectionType>(undefined as never);
@@ -25,7 +26,12 @@ export const Section = () => {
     setStudents(newStudents);
 
     // update database
-    fetch(`/api/students/${student_id}/drop/`, { method: "PATCH" });
+    fetch(`/api/students/${student_id}/drop/`, {
+      method: "PATCH",
+      headers: {
+        "X-CSRFToken": Cookies.get("csrftoken") ?? "",
+      },
+    });
   };
 
   return (
