@@ -5,8 +5,8 @@ import Cookies from "js-cookie";
 
 export const Section = () => {
   const [section, setSection] = useState<SectionType>(undefined as never);
-  const [students, setStudents] = useState<Student[]>([]);
   const { id } = useParams();
+  var count = 0;
 
   useEffect(() => {
     fetch(`/api/sections/${id}/details/`)
@@ -14,29 +14,14 @@ export const Section = () => {
       .then((data) => {
         setSection(data);
       });
-    fetch(`/api/sections/${id}/students/`)
-      .then((res) => res.json())
-      .then((data) => {
-        setStudents(data);
-      });
+    /* Task 2: Make an API call to get the student data. */
   }, []);
-
-  const handleDrop = (student_id: number) => {
-    const newStudents = students.filter((s) => s.id !== student_id);
-    setStudents(newStudents);
-
-    // update database
-    fetch(`/api/students/${student_id}/drop/`, {
-      method: "PATCH",
-      headers: {
-        "X-CSRFToken": Cookies.get("csrftoken") ?? "",
-      },
-    });
-  };
-
+  
   return (
     <div>
       <h1>Section</h1>
+      <p>Task 1: Use the UseEffect hook to implement this count button! </p>
+      <button>I was clicked {count} times!</button>
       {section && (
         <div>
           <p>
@@ -49,17 +34,7 @@ export const Section = () => {
         </div>
       )}
       <p>Students:</p>
-      <ul>
-        {students.map((student) => (
-          <li key={student.id}>
-            <button onClick={() => handleDrop(student.id)}>Drop</button>{" "}
-            <Link to={`/students/${student.id}`}>
-              {student.user.first_name} {student.user.last_name} (id:{" "}
-              {student.id})
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <p>Task 2: Make an API call to get the student data.</p>
     </div>
   );
 };
